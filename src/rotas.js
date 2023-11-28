@@ -1,9 +1,11 @@
 const express = require('express');
-const usuarios = require('./componentes/usuarios')
-const categorias = require('./componentes/categorias')
-const rotas = express()
+const usuarios = require('./componentes/usuarios');
+const listar = require('./componentes/categorias');
+const rotas = express();
+require('dotenv').config()
 
-rotas.get('/user', usuarios.cadastrar)
-rotas.get('/category', categorias.listar)
+rotas.post('/usuario', usuarios.cadastrar);
+rotas.post('/login', usuarios.login);
+rotas.get("/categoria", listar);
 
-module.exports = rotas
+module.exports = rotas;

@@ -60,8 +60,28 @@ const login = async (req, res) => {
     }
 }
 
+const atualizarPerfil = async (req, res) => {
+    const { nome, email, senha } = req.body
+    try {
+
+        if (!nome || !email || !senha) {
+            return res.status(404).json({ mesangem: "Todos os campos são obrigatórios" });
+        }
+
+        const senhaCripto = await bcrypt.hash(senha, 10);
+        const usuarioAtualizado = await knex('usuarios').update({ nome: nome, email: email, senha: senhaCripto }).where({email});
+        if(!usuarioAtualizado){
+            return res.status(400).json({mensagem:"Usuario não atualizado!"});
+        }
+        return res.json({ mensagem: "Atualizado com êxito!" });
+
+    } catch (error) {
+        return res.status(500).json(error.message)
+    }
+}
 
 module.exports = {
     cadastrar,
-    login
+    login,
+    atualizarPerfil,
 }

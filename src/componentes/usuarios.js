@@ -24,7 +24,7 @@ const cadastrar = async (req, res) => {
         return res.status(200).json({ mesangem: "Usuário cadastrado com sucesso" })
 
     } catch (error) {
-        return res.status(500).json(error.message)
+        return res.status(500).json({ mensagem: "Erro interno no servidor" })
     }
 }
 
@@ -56,30 +56,29 @@ const login = async (req, res) => {
         return res.json({ usuario: usuarioLogado, token })
 
     } catch (error) {
-        return res.status(500).json(error.message)
+        return res.status(500).json({ mensagem: "Erro interno no servidor" })
     }
 }
-
 const detalharPerfil = async (req, res) => {
-    const {authorization} = req.headers;
+    const { authorization } = req.headers;
     try {
         let token = authorization.split(' ')[1];
         token = jwt.decode(token);
-        
+
         const usuario = await knex('usuarios').select("*").where('id', token.id);
-        const {senha: _, ...usuarioLogado} = usuario[0];
-        if(!usuarioLogado){
-            return res.status(404).json({mensagem: "Nenhum perfil encontrado!"});
+        const { senha: _, ...usuarioLogado } = usuario[0];
+        if (!usuarioLogado) {
+            return res.status(404).json({ mensagem: "Nenhum perfil encontrado!" });
         }
         return res.json(usuarioLogado);
 
     } catch (error) {
-        return res.status(500).json(error.message)
+        return res.status(500).json({ mensagem: "Erro interno no servidor" })
     }
 }
 
 const atualizarPerfil = async (req, res) => {
-    const {authorization} = req.headers;
+    const { authorization } = req.headers;
     const { nome, email, senha } = req.body
     try {
 
@@ -90,14 +89,14 @@ const atualizarPerfil = async (req, res) => {
         }
 
         const senhaCripto = await bcrypt.hash(senha, 10);
-        const usuarioAtualizado = await knex('usuarios').update({ nome: nome, email: email, senha: senhaCripto }).where('id',token.id);
-        if(!usuarioAtualizado){
-            return res.status(400).json({mensagem:"Usuario não atualizado!"});
+        const usuarioAtualizado = await knex('usuarios').update({ nome: nome, email: email, senha: senhaCripto }).where('id', token.id);
+        if (!usuarioAtualizado) {
+            return res.status(400).json({ mensagem: "Usuario não atualizado!" });
         }
         return res.json({ mensagem: "Atualizado com êxito!" });
 
     } catch (error) {
-        return res.status(500).json(error.message)
+        return res.status(500).json({ mensagem: "Erro interno no servidor" })
     }
 }
 
@@ -105,5 +104,5 @@ module.exports = {
     cadastrar,
     login,
     detalharPerfil,
-    atualizarPerfil
+    atualizarPerfil,
 }

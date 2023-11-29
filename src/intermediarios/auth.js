@@ -1,5 +1,5 @@
 const jws = require('jsonwebtoken')
-const knex = require('../conexao')
+const knex = require('../BancoDeDados/conexao')
 require('dotenv').config()
 
 const tokenVerify = async (req, res, next) => {

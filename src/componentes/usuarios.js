@@ -60,6 +60,21 @@ const login = async (req, res) => {
     }
 }
 
+const detalharPerfil = async (req, res) => {
+    //const { email } = req.body;
+    try {
+        //const usuario = await knex('usuarios').select("*").where('email', email);
+        const usuario = req.usuario;
+        if(!usuario){
+            return res.status(404).json({mensagem: "Nenhum perfil encontrado!"});
+        }
+        return res.json(usuario);
+
+    } catch (error) {
+        return res.status(500).json(error.message)
+    }
+}
+
 const atualizarPerfil = async (req, res) => {
     const { nome, email, senha } = req.body
     try {
@@ -83,5 +98,6 @@ const atualizarPerfil = async (req, res) => {
 module.exports = {
     cadastrar,
     login,
+    detalharPerfil,
     atualizarPerfil,
 }

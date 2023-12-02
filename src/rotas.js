@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const rotas = express();
 const usuarios = require('./componentes/usuarios');
+const clientes = require('./componentes/clientes');
 const listar = require('./componentes/categorias');
 const tokenVerify = require('./intermediarios/auth');
 
@@ -10,5 +11,9 @@ rotas.post('/login', usuarios.login);
 rotas.get("/categoria", listar);
 rotas.get('/usuario', tokenVerify, usuarios.detalharPerfil)
 rotas.put('/usuario', tokenVerify, usuarios.atualizarPerfil)
+rotas.post('/cliente', tokenVerify, clientes.cadastrar)
+rotas.put('/cliente/:id', tokenVerify, clientes.editar)
+rotas.get('/cliente', tokenVerify, clientes.listar)
+rotas.get('/cliente/:id', tokenVerify, clientes.detalhar)
 
 module.exports = rotas;

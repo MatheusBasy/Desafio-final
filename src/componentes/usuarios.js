@@ -24,7 +24,7 @@ const cadastrar = async (req, res) => {
         return res.status(200).json({ mesangem: "Usuário cadastrado com sucesso" })
 
     } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno no servidor" })
+        return res.status(400).json({ mensagem: "Erro interno no servidor" })
     }
 }
 
@@ -56,7 +56,7 @@ const login = async (req, res) => {
         return res.json({ usuario: usuarioLogado, token })
 
     } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno no servidor" })
+        return res.status(400).json({ mensagem: "Erro interno no servidor" })
     }
 }
 const detalharPerfil = async (req, res) => {
@@ -73,7 +73,7 @@ const detalharPerfil = async (req, res) => {
         return res.json(usuarioLogado);
 
     } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno no servidor" })
+        return res.status(400).json({ mensagem: "Erro interno no servidor" })
     }
 }
 
@@ -96,7 +96,7 @@ const atualizarPerfil = async (req, res) => {
         return res.json({ mensagem: "Atualizado com êxito!" });
 
     } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno no servidor" })
+        return res.status(400).json({ mensagem: "Erro interno no servidor" })
     }
 }
 

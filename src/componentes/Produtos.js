@@ -72,8 +72,45 @@ const CadastrarProduto = async (req, res) => {
   }
 };
 
+const DetalharProduto = async (req, res) =>{
+  const usuario = req;
+  if (!usuario) {
+    return res.status(401).json({ messagem: 'Usuário não autenticado' });
+  }
+  const { id } = req.params;
+    try {
+      const produto = await knex('produtos').select("*").where('id', id);
+      if(!produto){
+        return res.status(404).json({mensagem:"Nenhum produto encontrado!"});
+      }
+      return res.json(produto);
+    } catch (error) {
+        return res.status(400).json({ mensagem: "Erro interno no servidor" })
+    }
+};
+
+const DeletarProduto = async (req, res) =>{
+  const usuario = req;
+  if (!usuario) {
+    return res.status(401).json({ messagem: 'Usuário não autenticado' });
+  }
+  const { id } = req.params;
+    try {
+      const produto = await knex('produtos').select("*").where('id', id);
+      if(!produto){
+        return res.status(404).json({mensagem: 'Nenhum produto encontrado!'});
+      }
+      await knex('produtos').where('id', id).del();
+      return res.json({mensagem:"Produto excluido com êxito!"});
+    } catch (error) {
+        return res.status(400).json({ mensagem: "Erro interno no servidor" })
+    }
+};
+
   module.exports = {
     CadastrarProduto,
     EditarProduto,
-    ListarProduto
+    ListarProduto,
+    DetalharProduto,
+    DeletarProduto
 };

@@ -25,7 +25,7 @@ const CadastrarProduto = async (req, res) => {
         return res.status(200).json(novoProduto);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ mensagem: 'Erro interno do servidor' });
+        res.status(400).json({ mensagem: 'Erro interno do servidor' });
     }
 };
 
@@ -92,7 +92,7 @@ const DetalharProduto = async (req, res) => {
         if (!produto) {
             return res.status(404).json({ mensagem: "Nenhum produto encontrado!" });
         }
-        return res.json(produto);
+        return res.status(200).json(produto);
     } catch (error) {
         return res.status(400).json({ mensagem: "Erro interno no servidor" })
     }
@@ -110,7 +110,7 @@ const DeletarProduto = async (req, res) => {
             return res.status(404).json({ mensagem: 'Nenhum produto encontrado!' });
         }
         await knex('produtos').where('id', id).del();
-        return res.json({ mensagem: "Produto excluido com êxito!" });
+        return res.status(200).json({ mensagem: "Produto excluido com êxito!" });
     } catch (error) {
         return res.status(400).json({ mensagem: "Erro interno no servidor" })
     }

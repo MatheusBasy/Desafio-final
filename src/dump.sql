@@ -39,4 +39,4 @@ CREATE TABLE clientes (
     cidade text,
     estado text
 );
- 
+

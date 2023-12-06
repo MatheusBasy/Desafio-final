@@ -61,6 +61,14 @@ const EditarProduto = async (req, res) => {
 const ListarProduto = async (req, res) => {
     try {
         const { categoria_id } = req.query;
+
+        if (categoria_id) {
+            const categoriaExis = await knex('categorias').where({ id: categoria_id }).first();
+            if (!categoriaExis) {
+                return res.status(404).json({ mensagem: 'ID de categoria inexistente' });
+            }
+        }
+
         let query = knex.select('*').from('produtos');
         if (categoria_id) {
             query = query.where({ categoria_id });

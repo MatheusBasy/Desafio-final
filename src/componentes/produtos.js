@@ -1,21 +1,18 @@
 const knex = require('../BancoDeDados/conexao');
 
 const CadastrarProduto = async (req, res) => {
-
     const usuario = req;
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
 
-
     if (!usuario) {
-        return res.status(401).json({ messagem: 'Usuário não autenticado' });
+        return res.status(401).json({ mensagem: 'Usuário não autenticado' });
     }
 
-    if (!descricao || !quantidade_estoque < 0 || !valor || !categoria_id) {
-        return res.status(400).json({ messagem: 'Todos os campos são obrigatórios' });
+    if (!descricao || quantidade_estoque < 0 || !valor || !categoria_id) {
+        return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios' });
     }
+
     try {
-
-
         await knex('produtos').insert({
             descricao,
             quantidade_estoque,
@@ -23,12 +20,15 @@ const CadastrarProduto = async (req, res) => {
             categoria_id,
         });
 
-        return res.status(200).json({ messagem: 'Produto cadastrado com sucesso' });
-    } catch (error) {
+        const novoProduto = await knex('produtos').where({ descricao, quantidade_estoque, valor, categoria_id }).first();
 
-        res.status(400).json({ messagem: 'Erro interno do servidor' });
+        return res.status(200).json(novoProduto);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensagem: 'Erro interno do servidor' });
     }
 };
+
 const EditarProduto = async (req, res) => {
 
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
@@ -49,8 +49,9 @@ const EditarProduto = async (req, res) => {
             valor,
             categoria_id,
         });
+        const editProduto = await knex('produtos').where({ descricao, quantidade_estoque, valor, categoria_id }).first();
 
-        return res.status(200).json({ messagem: 'Produto atualizado com sucesso' });
+        return res.status(200).json(editProduto);
     } catch (error) {
 
         res.status(400).json({ messagem: 'Erro interno do servidor' });
@@ -68,7 +69,7 @@ const ListarProduto = async (req, res) => {
         return res.status(200).json(produtos);
     } catch (error) {
 
-        return res.status(500).json({ messagem: 'Erro interno do servidor' });
+        return res.status(400).json({ messagem: 'Erro interno do servidor' });
     }
 };
 

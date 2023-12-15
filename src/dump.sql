@@ -39,3 +39,23 @@ CREATE TABLE clientes (
     cidade text,
     estado text
 );
+
+CREATE TABLE pedidos (
+    id serial PRIMARY KEY,
+    cliente_id INT,
+    observacao TEXT,
+    valor_total DECIMAL(10, 2)
+);
+
+
+CREATE TABLE pedido_produtos (
+    id serial PRIMARY KEY,
+    pedido_id INT,
+    produto_id INT,
+    quantidade_produto INT,
+    valor_produto DECIMAL(10, 2)
+);
+
+
+ALTER TABLE produtos
+ADD COLUMN produto_imagem VARCHAR(255);

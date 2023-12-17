@@ -39,4 +39,21 @@ CREATE TABLE clientes (
     cidade text,
     estado text
 );
+create table PEDIDOS (
+	id serial primary key,
+  CLIENTE_ID integer references CLIENTES(ID),
+  OBSERVACAO text,
+  VALOR_TOTAL decimal(10, 2) NOT NULL
+);
+
+create table PEDIDO_PRODUTOS (
+	id serial primary key,
+  PEDIDO_ID integer references PEDIDOS(ID),
+  PRODUTO_ID integer references PRODUTOS(ID),
+  QUANTIDADE_PRODUTO integer not null,
+  VALOR_PRODUTO decimal(10, 2) NOT NULL
+);
+
+ALTER TABLE produtos
+ADD COLUMN produto_imagem VARCHAR(255);
 

@@ -6,6 +6,7 @@ const clientes = require('./componentes/clientes');
 const listar = require('./componentes/categorias');
 const tokenVerify = require('./intermediarios/auth');
 const { CadastrarProduto, EditarProduto, ListarProduto, DetalharProduto, DeletarProduto } = require('./componentes/produtos');
+const { cadastrarPedido } = require('./componentes/pedido');
 
 rotas.post('/usuario', usuarios.cadastrar);
 rotas.post('/login', usuarios.login);
@@ -22,6 +23,7 @@ rotas.put('/produto/:id', tokenVerify, EditarProduto);
 rotas.get('/produto', tokenVerify, ListarProduto);
 rotas.get('/produto/:id', tokenVerify, DetalharProduto);
 rotas.delete('/produto/:id', tokenVerify, DeletarProduto);
+rotas.post('/pedido', tokenVerify,cadastrarPedido);
 
 
 module.exports = rotas;

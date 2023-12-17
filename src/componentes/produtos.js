@@ -15,6 +15,10 @@ const CadastrarProduto = async (req, res) => {
     if (!descricao || !quantidade_estoque || !valor || !categoria_id) {
         return res.status(400).json({ messagem: 'Todos os campos são obrigatórios' });
     }
+     if (quantidade_estoque && valor < 0) {
+        res.status(400).json({ messagem: 'O valor e a quantidade do produtos não podem ser menor que zero' });
+    }
+    
     let upload = { url: null };
     if (file) {
         upload = await produto_imagem.salvarImagem(file);

@@ -6,6 +6,9 @@ const clientes = require('./componentes/clientes');
 const listar = require('./componentes/categorias');
 const tokenVerify = require('./intermediarios/auth');
 const { CadastrarProduto, EditarProduto, ListarProduto, DetalharProduto, DeletarProduto } = require('./componentes/produtos');
+const upload = require('./intermediarios/upload');
+const produto_imagem = require('./componentes/produto_imagem');
+const pedidos = require('./componentes/pedido');
 
 rotas.post('/usuario', usuarios.cadastrar);
 rotas.post('/login', usuarios.login);
@@ -17,9 +20,13 @@ rotas.put('/cliente/:id', tokenVerify, clientes.editar)
 rotas.get('/cliente', tokenVerify, clientes.listar)
 rotas.get('/cliente/:id', tokenVerify, clientes.detalhar)
 rotas.post('/produto', tokenVerify, CadastrarProduto);
-rotas.put('/produto/:id', tokenVerify, EditarProduto);
+rotas.put('/produto/:id', upload.single('produto_imagem'), tokenVerify, EditarProduto);
 rotas.get('/produto', tokenVerify, ListarProduto);
 rotas.get('/produto/:id', tokenVerify, DetalharProduto);
 rotas.delete('/produto/:id', tokenVerify, DeletarProduto);
+//rotas.get('/imagens', produto_imagem.listarImagens);
+//rotas.delete('/imagem/:path_img', produto_imagem.apagarImagem);
+rotas.post('/pedido', tokenVerify, pedidos.cadastrarPedido);
+rotas.get('/pedido', tokenVerify, pedidos.listarPedidos);
 
 module.exports = rotas;

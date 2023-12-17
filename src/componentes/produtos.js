@@ -1,7 +1,9 @@
 const knex = require('../BancoDeDados/conexao');
+const produto_imagem = require('./produto_imagem');
 
 const CadastrarProduto = async (req, res) => {
 
+    const { file } = req;
     const usuario = req;
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
 
@@ -13,6 +15,11 @@ const CadastrarProduto = async (req, res) => {
     if (!descricao || !quantidade_estoque || !valor || !categoria_id) {
         return res.status(400).json({ messagem: 'Todos os campos são obrigatórios' });
     }
+    let upload = { url: null };
+    if (file) {
+        upload = await produto_imagem.salvarImagem(file);
+        console.log(upload);
+    }
     try {
 
 
@@ -21,6 +28,7 @@ const CadastrarProduto = async (req, res) => {
             quantidade_estoque,
             valor,
             categoria_id,
+            produto_imagem: upload.url
         });
 
         return res.status(200).json({ messagem: 'Produto cadastrado com sucesso' });
@@ -31,6 +39,7 @@ const CadastrarProduto = async (req, res) => {
 };
 const EditarProduto = async (req, res) => {
 
+    const { file } = req;
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
     const { id } = req.params;
 
@@ -42,12 +51,18 @@ const EditarProduto = async (req, res) => {
     if (!descricao || !quantidade_estoque || !valor || !categoria_id || !id) {
         return res.status(400).json({ messagem: 'Todos os campos são obrigatórios' });
     }
+    let upload = { url: null };
+    if (file) {
+        upload = await produto_imagem.salvarImagem(file);
+        console.log(upload);
+    }
     try {
         await knex('produtos').where({ id }).update({
             descricao,
             quantidade_estoque,
             valor,
             categoria_id,
+            produto_imagem: upload.url
         });
 
         return res.status(200).json({ messagem: 'Produto atualizado com sucesso' });
@@ -96,9 +111,22 @@ const DeletarProduto = async (req, res) => {
     }
     const { id } = req.params;
     try {
+        const temPedido = await knex('pedido_produtos').select('*').where('produto_id', id)
+        if (temPedido.length > 0) {
+            return res.status(400).json({ mensagem: "Não foi possível excluir o produto! Existe pedidos vinculados a esse produto!" })
+        }
+
         const produto = await knex('produtos').select("*").where('id', id);
         if (!produto) {
             return res.status(404).json({ mensagem: 'Nenhum produto encontrado!' });
+        }
+        const pedidosVinculados = await knex('pedido_produtos').select('*').where('produto_id', id);
+        if (pedidosVinculados.length > 0) {
+            return res.status(400).json({ mensagem: 'Não é possível excluir produto vinculado a pedidos' });
+        }
+        const path = produto[0].produto_imagem;
+        if (path) {
+            await produto_imagem.apagarImagem(path.split('.com/')[1]);
         }
         await knex('produtos').where('id', id).del();
         return res.json({ mensagem: "Produto excluido com êxito!" });

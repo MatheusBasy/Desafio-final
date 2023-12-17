@@ -28,6 +28,9 @@ const cadastrarPedido = async (req, res) => {
             if (produtoEncontrado.quantidade_estoque < itemPedido.quantidade_produto) {
                 return res.status(400).json({ mensagem: 'Quantidade insuficiente em estoque para o produto solicitado.' });
             }
+                     if (itemPedido.quantidade_produto < 1) {
+                return res.status(400).json({ mensagem: 'A quantidade do produto é inválida.' });
+            }
 
             const itemDoPedido = {
                 pedido_id: null,
